@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>class selector</title>
+  <title>subject selector</title>
   <link href="https://fonts.googleapis.com/css?family=Orbitron:wght@700&display=swap" rel="stylesheet" />
   <style>
     body {
@@ -84,56 +84,39 @@
       text-decoration: underline;
     }
 
-
-    .c12{
-        color:black;
-        position: absolute;
-        left:843px ;
-        top:150px;
-        z-index: 999;
-    }
-    .c11{
-        color:black;
-        position: absolute;
-        left:843px ;
-        top:250px;
-        z-index: 999;
-    }
-
-
     .c10{
         color:black;
         position: absolute;
         left:843px ;
-        top:350px;
+        top:440px;
         z-index: 999;
     }
     .c9{
         color:black;
         position: absolute;
-        left:843px ;
-        top:450px;
+        left:838px ;
+        top:540px;
         z-index: 999;
     }
     .c8{
         color:black;
         position: absolute;
         left:843px ;
-        top:550px;
+        top:640px;
         z-index: 999;
     }
     .c7{
         color:black;
         position: absolute;
-        left:843px ;
-        top:650px;
+        left:838px ;
+        top:740px;
         z-index: 999;
     }
     .c6{
         color:black;
         position: absolute;
         left:843px ;
-        top:750px;
+        top:840px;
         z-index: 999;
     }
   </style>
@@ -161,28 +144,24 @@
     <line x1="800" y1="700" x2="800" y2="600" />
     <line x1="800" y1="600" x2="800" y2="500" />
     <line x1="800" y1="500" x2="800" y2="400" />
-    <line x1="800" y1="400" x2="800" y2="300" />
-    <line x1="800" y1="300" x2="800" y2="200" />
-    <line x1="800" y1="200" x2="800" y2="100" />
-    <!-- Nodes: only some have popup -->
+
+<!-- Nodes: only some have popup -->
     <circle cx="800"  cy="800" r="24" onclick="jumpToCircle(event)" data-popup="false" />
-    <circle cx="800" cy="700" r="24" onclick="jumpToCircle(event)" data-popup="false"  data-popup-text="Worksheet1 " />
+    <circle cx="800" cy="700" r="24" onclick="jumpToCircle(event)" data-popup="fasle"  data-popup-text=" " />
     <circle cx="800" cy="600" r="24" onclick="jumpToCircle(event)" data-popup="false" />
-    <circle cx="800" cy="500" r="24" onclick="jumpToCircle(event)" data-popup="false"  data-popup-text="Worksheet2 " />
-    <circle cx="800" cy="400" r="24" onclick="jumpToCircle(event)" data-popup="fasle" data-popup-text=" " />
-    <circle cx="800" cy="300"  r="24" onclick="jumpToCircle(event)" data-popup="true" data-popup-text=" "/>    
-    <circle cx="800" cy="200"  r="24" onclick="jumpToCircle(event)" data-popup="false" />
-    <circle cx="800" cy="100"  r="24" onclick="jumpToCircle(event)" data-popup="false" />
+    <circle cx="800" cy="500" r="24" onclick="jumpToCircle(event)" data-popup="true"  data-popup-text=" " />
+    <circle cx="800" cy="400" r="24" onclick="jumpToCircle(event)" data-popup="false"  data-popup-text="Worksheet3" />
+
 
 
   </svg>
-<p class="c12">12</p>
-<p class="c11" >11</p>
-<p class="c10">10</p>
-<p class="c9">9</p>
-<p class="c8" >8</p>
-<p class="c7" >7</p>
-<p class="c6" >6</p>
+
+
+<p class="c10">sst</p>
+<p class="c9">math</p>
+<p class="c8" >phy</p>
+<p class="c7" >chem</p>
+<p class="c6" ></p>
 
 
   <script>
@@ -213,7 +192,7 @@
           if (showPopup) {
             const popupLink = document.getElementById('popup-link');
             // Open the link in a new tab after animation
-            window.open(popupLink.href, '_blank');
+            window.open(popupLink.href, '_self');
           }
         }
       }
