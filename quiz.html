@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Odisha Class 10 Maths Quiz</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #faf7f1;
+    transition: background 1s ease;
+    margin: 0; padding: 0;
+  }
+  .photo-bg {
+    background: url('https://images.pexels.com/photos/34950/pexels-photo.jpg') no-repeat center center fixed;
+    background-size: cover;
+    animation: bgPop 1.4s ease forwards;
+  }
+  @keyframes bgPop {
+    0% { filter: brightness(1.8) blur(3px); }
+    100% { filter: brightness(1) blur(0); }
+  }
+  .container {
+    max-width: 480px;
+    margin: 60px auto;
+    background: rgba(255, 255, 255, 0.97);
+    border-radius: 16px;
+    padding: 30px 28px;
+    box-shadow: 0 5px 18px rgba(0,0,0,0.15);
+    text-align: center;
+  }
+  h1 {
+    font-size: 1.9em;
+    color: #5c3b00;
+    margin-bottom: 26px;
+  }
+  .question {
+    font-weight: bold;
+    font-size: 1.3em;
+    margin-bottom: 22px;
+    color: #7a4f0f;
+  }
+  ul.options {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 28px;
+    text-align: left;
+  }
+  ul.options li {
+    margin: 14px 0;
+  }
+  label {
+    cursor: pointer;
+    font-size: 1.1em;
+    user-select: none;
+  }
+  input[type="radio"]:checked + label {
+    color: #9c6d0a;
+    font-weight: 700;
+  }
+  button {
+    background-color: #be851a;
+    border: none;
+    padding: 12px 34px;
+    font-size: 1.15em;
+    color: white;
+    border-radius: 9px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px #c7a349aa;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #d3a339;
+  }
+  .result {
+    font-weight: 700;
+    font-size: 1.25em;
+    margin-top: 18px;
+    min-height: 28px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Odisha Class 10 Maths Quiz</h1>
+  <div id="question" class="question"></div>
+  <ul id="options" class="options"></ul>
+  <button id="submitBtn">Submit</button>
+  <div id="result" class="result"></div>
+</div>
+
+<audio id="correctSound" src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_62b8e7d35a.mp3?filename=retro-video-game-arcade-coin-timer-6690.mp3"></audio>
+
+<script>
+  const quiz = [
+    {
+      question: "What is \\( \\sqrt{144} \\)?",
+      options: ["10", "11", "12", "14"],
+      answer: "12"
+    },
+    {
+      question: "Simplify: \\( 9 + 6 \\times 4 \\)",
+      options: ["24", "33", "45", "25"],
+      answer: "33"
+    },
+    {
+      question: "Perimeter of a rectangle with length 7 cm and width 5 cm?",
+      options: ["12 cm", "24 cm", "35 cm", "30 cm"],
+      answer: "24 cm"
+    }
+  ];
+
+  let current = 0;
+  const questionEl = document.getElementById('question');
+  const optionsEl = document.getElementById('options');
+  const submitBtn = document.getElementById('submitBtn');
+  const resultEl = document.getElementById('result');
+  const correctSound = document.getElementById('correctSound');
+  const body = document.body;
+
+  function displayQuestion() {
+    const q = quiz[current];
+    questionEl.textContent = q.question;
+    optionsEl.innerHTML = '';
+    q.options.forEach((opt, i) => {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <input type="radio" id="opt${i}" name="option" value="${opt}">
+        <label for="opt${i}">${opt}</label>
+      `;
+      optionsEl.appendChild(li);
+    });
+    resultEl.textContent = '';
+  }
+
+  submitBtn.onclick = () => {
+    const selected = document.querySelector('input[name="option"]:checked');
+    if (!selected) {
+      alert('Please select an answer!');
+      return;
+    }
+    if (selected.value === quiz[current].answer) {
+      correctSound.play();
+      body.classList.add('photo-bg');
+      resultEl.style.color = 'green';
+      resultEl.textContent = "Correct! 🎉";
+      setTimeout(() => body.classList.remove('photo-bg'), 1700);
+      current++;
+      if (current < quiz.length) {
+        setTimeout(displayQuestion, 1700);
+      } else {
+        setTimeout(() => {
+          questionEl.textContent = 'Quiz Completed!';
+          optionsEl.innerHTML = '';
+          submitBtn.style.display = 'none';
+          resultEl.textContent = 'Well done! Refresh to try again.';
+        }, 1700);
+      }
+    } else {
+      resultEl.style.color = 'red';
+      resultEl.textContent = "Wrong answer. Try again.";
+    }
+  };
+
+  displayQuestion();
+</script>
+
+</body>
+</html>
