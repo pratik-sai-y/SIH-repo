@@ -46,6 +46,74 @@
       background-color: green;
       color: white;
     }
+
+    .drag-match-container {
+    max-width: 600px;
+    margin: auto;
+    font-family: Arial, sans-serif;
+  }
+  .drag-match-container h3 {
+    text-align: center;
+    margin-bottom: 15px;
+  }
+  .drag-match-formulas,
+  .drag-match-descriptions {
+    border: 2px dashed #999;
+    padding: 10px;
+    margin: 10px 0;
+    min-height: 50px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
+  .drag-match-item {
+    background: #4a90e2;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: grab;
+    user-select: none;
+  }
+  .drag-match-target {
+    border: 2px solid #4a90e2;
+    background: #e7f0fe;
+    width: 45%;
+    min-height: 60px;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 6px;
+    text-align: center;
+    font-weight: bold;
+    color: #333;
+    user-select: none;
+  }
+  .drag-match-target.correct {
+    background: #c8e6c9;
+    border-color: #388e3c;
+    color: #2e7d32;
+  }
+  .drag-match-target.incorrect {
+    background: #ffcdd2;
+    border-color: #d32f2f;
+    color: #b71c1c;
+  }
+  #reset-button {
+    display: none;
+    margin: 15px auto 0;
+    padding: 10px 20px;
+    font-size: 1em;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    user-select: none;
+  }
+  #reset-button:hover {
+    background-color: #357ab7;
+  }
+
   </style>
 </head>
 <body>
@@ -66,6 +134,29 @@
   <div class="eqn"><b>Area = ½ |x₁(y₂ - y₃) + x₂(y₃ - y₁) + x₃(y₁ - y₂)|</b></div>
 
   <p data-i18n="point5"><b>*Note: If the area is zero, the three points are collinear.</b></p>
+
+  <div class="drag-match-container">
+  <h3>Drag to Match Coordinate Geometry Formulas</h3>
+
+  <div class="drag-match-formulas" id="formulas">
+    <div draggable="true" class="drag-match-item" data-answer="distance">Distance Formula</div>
+    <div draggable="true" class="drag-match-item" data-answer="midpoint">Midpoint Formula</div>
+    <div draggable="true" class="drag-match-item" data-answer="slope">Slope Formula</div>
+    <div draggable="true" class="drag-match-item" data-answer="circle">Circle Equation</div>
+    <div draggable="true" class="drag-match-item" data-answer="line">Line Equation (Slope-Intercept)</div>
+  </div>
+
+  <div class="drag-match-descriptions" id="descriptions">
+    <div class="drag-match-target" data-accept="distance">&#x221A;(x₂ - x₁)² + (y₂ - y₁)²</div>
+    <div class="drag-match-target" data-accept="midpoint">( (x₁ + x₂) / 2, (y₁ + y₂) / 2 )</div>
+    <div class="drag-match-target" data-accept="slope">(y₂ - y₁) / (x₂ - x₁)</div>
+    <div class="drag-match-target" data-accept="circle">(x - h)² + (y - k)² = r²</div>
+    <div class="drag-match-target" data-accept="line">y = mx + c</div>
+  </div>
+
+  <button id="reset-button">Reset Quiz</button>
+</div>
+
 
   <script>
     const translations = {
@@ -111,6 +202,115 @@
     });
 
     updateLanguage(currentLang);
+
+    (function() {
+    const container = document.querySelector('.drag-match-container');
+    const formulasContainer = container.querySelector('#formulas');
+    const descriptionsContainer = container.querySelector('#descriptions');
+    const resetButton = container.querySelector('#reset-button');
+
+    const formulasData = [
+      { answer: "distance", label: "Distance Formula" },
+      { answer: "midpoint", label: "Midpoint Formula" },
+      { answer: "slope", label: "Slope Formula" },
+      { answer: "circle", label: "Circle Equation" },
+      { answer: "line", label: "Line Equation (Slope-Intercept)" }
+    ];
+    const descriptionsData = [
+      { accept: "distance", label: "√(x₂ - x₁)² + (y₂ - y₁)²" },
+      { accept: "midpoint", label: "( (x₁ + x₂) / 2, (y₁ + y₂) / 2 )" },
+      { accept: "slope", label: "(y₂ - y₁) / (x₂ - x₁)" },
+      { accept: "circle", label: "(x - h)² + (y - k)² = r²" },
+      { accept: "line", label: "y = mx + c" }
+    ];
+
+    let draggedItem = null;
+
+    function createDraggableItem(data) {
+      const div = document.createElement('div');
+      div.draggable = true;
+      div.className = 'drag-match-item';
+      div.dataset.answer = data.answer;
+      div.textContent = data.label;
+      div.addEventListener('dragstart', dragStart);
+      div.addEventListener('dragend', dragEnd);
+      return div;
+    }
+
+    function createDropTarget(data) {
+      const div = document.createElement('div');
+      div.className = 'drag-match-target';
+      div.dataset.accept = data.accept;
+      div.textContent = data.label;
+      div.addEventListener('dragover', dragOver);
+      div.addEventListener('drop', drop);
+      return div;
+    }
+
+    function setup() {
+      formulasContainer.innerHTML = '';
+      descriptionsContainer.innerHTML = '';
+      resetButton.style.display = 'none';
+
+      formulasData.forEach(f => {
+        const item = createDraggableItem(f);
+        formulasContainer.appendChild(item);
+      });
+      descriptionsData.forEach(d => {
+        const target = createDropTarget(d);
+        descriptionsContainer.appendChild(target);
+      });
+    }
+
+    function dragStart(e) {
+      draggedItem = e.target;
+      e.dataTransfer.setData('text', e.target.dataset.answer);
+      setTimeout(() => (e.target.style.visibility = 'hidden'), 0);
+    }
+
+    function dragEnd(e) {
+      if (e.target.style.visibility === 'hidden') {
+        e.target.style.visibility = 'visible';
+      }
+      draggedItem = null;
+    }
+
+    function dragOver(e) {
+      e.preventDefault();
+    }
+
+    function drop(e) {
+      e.preventDefault();
+      if (!draggedItem) return;
+
+      const draggedAnswer = draggedItem.dataset.answer;
+      const targetAccept = e.target.dataset.accept;
+
+      if (draggedAnswer === targetAccept) {
+        e.target.classList.add('correct');
+        e.target.textContent = draggedItem.textContent + " ✔";
+        draggedItem.remove();
+
+        if (formulasContainer.children.length === 0) {
+          resetButton.style.display = 'block';
+        }
+      } else {
+        e.target.classList.add('incorrect');
+        setTimeout(() => e.target.classList.remove('incorrect'), 800);
+        draggedItem.style.visibility = 'visible';
+      }
+      draggedItem = null;
+    }
+
+    resetButton.addEventListener('click', () => {
+      setup();
+    });
+
+    // Initialize quiz on page load
+    setup();
+  })();
+
+    
   </script>
 </body>
 </html>
